@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/mseep-audited.png)](https://mseep.ai/app/nsxdavid-surrealdb-mcp-server)
+
 # SurrealDB MCP Server
 
 <p align="center">
