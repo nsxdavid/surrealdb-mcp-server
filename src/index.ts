@@ -2,7 +2,7 @@
 
 /**
  * SurrealDB MCP Server
- * 
+ *
  * This MCP server provides a standardized interface for AI assistants to interact with a SurrealDB database.
  * It implements tools for common SurrealDB operations including:
  * - Executing raw SurrealQL queries
@@ -14,8 +14,8 @@
  */
 
 // Redirect console.log and console.error to ensure no logs go to stdout
-console.log = (...args) => process.stderr.write(args.join(' ') + '\n');
-console.error = (...args) => process.stderr.write(args.join(' ') + '\n');
+console.log = (...args) => process.stderr.write(args.join(" ") + "\n");
+console.error = (...args) => process.stderr.write(args.join(" ") + "\n");
 
 // MCP SDK Imports
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -38,12 +38,16 @@ import { inspect } from "util";
 const logger = {
   info: (...args: unknown[]) => {
     const timestamp = new Date().toISOString();
-    process.stderr.write(`${timestamp} [surrealdb] [info] ${args.map(arg => typeof arg === 'string' ? arg : inspect(arg)).join(' ')}\n`);
+    process.stderr.write(
+      `${timestamp} [surrealdb] [info] ${args.map((arg) => (typeof arg === "string" ? arg : inspect(arg))).join(" ")}\n`
+    );
   },
   error: (...args: unknown[]) => {
     const timestamp = new Date().toISOString();
-    process.stderr.write(`${timestamp} [surrealdb] [error] ${args.map(arg => typeof arg === 'string' ? arg : inspect(arg)).join(' ')}\n`);
-  }
+    process.stderr.write(
+      `${timestamp} [surrealdb] [error] ${args.map((arg) => (typeof arg === "string" ? arg : inspect(arg))).join(" ")}\n`
+    );
+  },
 };
 
 // --- Database Configuration ---
@@ -946,9 +950,11 @@ async function main() {
   try {
     // Log connection attempt with more details
     logger.info(`Attempting to connect to SurrealDB at ${DB_ENDPOINT}...`);
-    logger.info(`Using namespace: ${DB_NAMESPACE}, database: ${DB_DATABASE}, user: ${DB_USER}`);
+    logger.info(
+      `Using namespace: ${DB_NAMESPACE}, database: ${DB_DATABASE}, user: ${DB_USER}`
+    );
     logger.info(`Password length: ${DB_PASS?.length || 0} characters`);
-    
+
     // Connect to SurrealDB using environment variables
     // Use the working authentication pattern: connect → use → signin with namespace/database
     await db.connect(DB_ENDPOINT!);
@@ -966,10 +972,10 @@ async function main() {
       namespace: DB_NAMESPACE!,
       database: DB_DATABASE!,
     });
-    
+
     // Connection and authentication successful
     logger.info("✅ SurrealDB connection and authentication successful!");
-    
+
     logger.info(
       `Successfully connected to SurrealDB (NS: ${DB_NAMESPACE}, DB: ${DB_DATABASE})`
     );
@@ -981,7 +987,10 @@ async function main() {
   } catch (error) {
     logger.error("--- FATAL ERROR ---");
     if (error instanceof Error) {
-      logger.error("Failed to connect to SurrealDB or start MCP server:", error.message);
+      logger.error(
+        "Failed to connect to SurrealDB or start MCP server:",
+        error.message
+      );
       logger.error("Error name:", error.name);
       logger.error("Full error:", error);
       logger.error(error.stack || "No stack trace available");

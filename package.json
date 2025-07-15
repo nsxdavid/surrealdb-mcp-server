@@ -1,6 +1,6 @@
 {
   "name": "surrealdb-mcp-server",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "description": "A Model Context Protocol (MCP) server that provides a standardized interface for AI assistants to interact with a SurrealDB database.",
   "type": "module",
   "main": "build/index.js",
