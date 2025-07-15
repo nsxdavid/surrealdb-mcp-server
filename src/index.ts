@@ -944,10 +944,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
  */
 async function main() {
   try {
-    // Log connection attempt using the environment variable
+    // Log connection attempt with more details
     logger.info(`Attempting to connect to SurrealDB at ${DB_ENDPOINT}...`);
+    logger.info(`Using namespace: ${DB_NAMESPACE}, database: ${DB_DATABASE}, user: ${DB_USER}`);
+    logger.info(`Password length: ${DB_PASS?.length || 0} characters`);
+    
     // Connect to SurrealDB using environment variables
-    // Use non-null assertion (!) because we've already validated these variables exist
     await db.connect(DB_ENDPOINT!, {
       namespace: DB_NAMESPACE!,
       database: DB_DATABASE!,
@@ -956,7 +958,10 @@ async function main() {
         password: DB_PASS!,
       },
     });
-    // Log success using the environment variables
+    
+    // Connection and authentication successful
+    logger.info("✅ SurrealDB connection and authentication successful!");
+    
     logger.info(
       `Successfully connected to SurrealDB (NS: ${DB_NAMESPACE}, DB: ${DB_DATABASE})`
     );
@@ -968,18 +973,21 @@ async function main() {
   } catch (error) {
     logger.error("--- FATAL ERROR ---");
     if (error instanceof Error) {
-      logger.error(
-        "Failed to connect to SurrealDB or start MCP server:",
-        error.message
-      );
+      logger.error("Failed to connect to SurrealDB or start MCP server:", error.message);
+      logger.error("Error name:", error.name);
+      logger.error("Full error:", error);
       logger.error(error.stack || "No stack trace available");
     } else {
       logger.error("An unknown error occurred during startup:", error);
     }
+    logger.error("Connection details (sanitized):");
+    logger.error(`URL: ${DB_ENDPOINT}`);
+    logger.error(`Namespace: ${DB_NAMESPACE}`);
+    logger.error(`Database: ${DB_DATABASE}`);
+    logger.error(`User: ${DB_USER}`);
     logger.error("-------------------");
-    // Ensure DB connection is closed if it was partially opened or if error occurred after connect
     await db.close();
-    process.exit(1); // Exit if we can't connect to the DB or start the server
+    process.exit(1);
   }
 }
 
