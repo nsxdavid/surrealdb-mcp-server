@@ -950,13 +950,21 @@ async function main() {
     logger.info(`Password length: ${DB_PASS?.length || 0} characters`);
     
     // Connect to SurrealDB using environment variables
-    await db.connect(DB_ENDPOINT!, {
+    // Use the working authentication pattern: connect → use → signin with namespace/database
+    await db.connect(DB_ENDPOINT!);
+
+    // Set namespace and database
+    await db.use({
       namespace: DB_NAMESPACE!,
       database: DB_DATABASE!,
-      auth: {
-        username: DB_USER!,
-        password: DB_PASS!,
-      },
+    });
+
+    // Authenticate with namespace and database included (this is the key!)
+    await db.signin({
+      username: DB_USER!,
+      password: DB_PASS!,
+      namespace: DB_NAMESPACE!,
+      database: DB_DATABASE!,
     });
     
     // Connection and authentication successful
